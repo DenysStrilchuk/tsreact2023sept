@@ -4,7 +4,7 @@ import {apiService} from "./apiService";
 import {urls} from "../constants";
 
 const postService = {
-    getAll: ():IRes<IPost> => apiService.get(urls.posts.base),
+    getAll: ():IRes<IPost[]> => apiService.get(urls.posts.base),
     getById: (id:number):IRes<IPost> => apiService.get(urls.posts.byId(id))
 }
 
