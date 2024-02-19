@@ -7,7 +7,7 @@ interface IProps extends PropsWithChildren {
 }
 
 const User: FC<IProps> = ({user}) => {
-    const {id, name, username, email} = user;
+    const {id, name} = user;
 
     const navigate  = useNavigate();
     return (
