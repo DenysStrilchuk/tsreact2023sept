@@ -1,2 +1,3 @@
+export * from './Headers';
 export * from './UsersContainer';
-export * from './PostsContainer'
+export * from './PostsContainer';
