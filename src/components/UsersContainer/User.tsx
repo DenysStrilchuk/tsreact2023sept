@@ -14,7 +14,7 @@ const User: FC<IProps> = ({user}) => {
         <div>
             <div>id: {id}</div>
             <div>name: {name}</div>
-            <button  onClick={() => navigate(id.toString())}>details</button>
+            <button  onClick={() => navigate(id.toString(), {state:{user}})}>details</button>
         </div>
     );
 };
