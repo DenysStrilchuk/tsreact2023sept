@@ -9,6 +9,7 @@ const UserDetails: FC<IProps> = ({userDetails}) => {
     const {id, name, username, email} = userDetails;
     return (
         <div>
+            <hr/>
             <div>id: {id}</div>
             <div>name: {name}</div>
             <div>username: {username}</div>
