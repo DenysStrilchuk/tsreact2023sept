@@ -41,6 +41,18 @@ const create = createAsyncThunk<void, { car: ICar }>(
     }
 )
 
+const update = createAsyncThunk<void, {car: ICar}>(
+    'carSlice/update',
+    async ({car}, {rejectWithValue}) => {
+        try {
+            await carService.getById(car.id, car)
+        }catch (e) {
+            const err = e as AxiosError;
+            return rejectWithValue(err.response.data)
+        }
+    }
+)
+
 const carSlice = createSlice({
     name: 'carSlice',
     initialState,
@@ -64,7 +76,8 @@ const {reducer: carReducer, actions} = carSlice;
 const carActions = {
     ...actions,
     getAll,
-    create
+    create,
+    update
 }
 
 export {

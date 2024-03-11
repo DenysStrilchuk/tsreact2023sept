@@ -15,7 +15,7 @@ const CarForm = () => {
             setValue('price', carForUpdate.price)
             setValue('year', carForUpdate.year)
         }
-    }, [carForUpdate]);
+    }, [carForUpdate, setValue]);
 
 
     const save: SubmitHandler<ICar> = (car) => {
@@ -23,8 +23,13 @@ const CarForm = () => {
         reset()
     }
 
+    const update: SubmitHandler<ICar> = (car) => {
+        dispatch(carActions.update({car}))
+        reset()
+    }
+
     return (
-        <form onSubmit={handleSubmit(save)}>
+        <form onSubmit={handleSubmit(carForUpdate?update:save)}>
             <input type="text" placeholder={'brand'} {...register('brand')}/>
             <input type="text" placeholder={'price'} {...register('price')}/>
             <input type="text" placeholder={'year'} {...register('year')}/>
