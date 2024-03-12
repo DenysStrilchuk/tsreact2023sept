@@ -1,19 +1,33 @@
 import {SubmitHandler, useForm} from "react-hook-form";
 import {IAuth} from "../../intterfaces";
+import {useAppDispatch} from "../../hooks/useAppDispatch";
+import {authActions} from "../../redux";
+import {useAppSelector} from "../../hooks";
+import {useNavigate} from "react-router-dom";
+
 
 const Register = () => {
     const {register, handleSubmit} = useForm<IAuth>();
-
-    const reg:SubmitHandler<IAuth> = (user) => {
-        
+    const dispatch = useAppDispatch();
+    const {registerError} = useAppSelector(state => state.auth);
+    const navigate = useNavigate();
+    const reg:SubmitHandler<IAuth> = async (user) => {
+        const {meta:{requestStatus}} = await dispatch(authActions.register({user}))
+        if (requestStatus === 'fulfilled') {
+            navigate('/login')
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit(reg)}>
-            <input type="text" placeholder={'username'} {...register('username')}/>
-            <input type="text" placeholder={'password'} {...register('password')}/>
-            <button>register</button>
-        </form>
+        <div>
+            {registerError && <h5>{registerError}</h5>}
+            <form onSubmit={handleSubmit(reg)}>
+                <input type="text" placeholder={'username'} {...register('username')}/>
+                <input type="text" placeholder={'password'} {...register('password')}/>
+                <button>register</button>
+            </form>
+        </div>
+
     );
 };
 
