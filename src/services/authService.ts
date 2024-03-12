@@ -3,27 +3,31 @@ import {IRes} from "../types";
 import {apiService} from "./apiService";
 import {urls} from "../constants";
 
-const accessTokenKey  = 'access'
+const accessTokenKey = 'access'
 const refreshTokenKey = 'refresh'
 
 const authService = {
-    register(user:IAuth):IRes<IUser>{
+    register(user: IAuth): IRes<IUser> {
         return apiService.post(urls.auth.register, user)
     },
-    me():IRes<IUser>{
+    async login(user: IAuth): Promise<void> {
+         const {data} = await apiService.post(urls.auth.login, user);
+         this.setTokens(data)
+    },
+    me(): IRes<IUser> {
         return apiService.post(urls.auth.me)
     },
-    setTokens({access, refresh}:ITokens):void{
+    setTokens({access, refresh}: ITokens): void {
         localStorage.setItem(accessTokenKey, access)
         localStorage.setItem(refreshTokenKey, refresh)
     },
-    getAccessToken():string{
+    getAccessToken(): string {
         return localStorage.getItem(accessTokenKey)
     },
-    getRefreshToken():string{
+    getRefreshToken(): string {
         return localStorage.getItem(refreshTokenKey)
     },
-    deleteTokens():void{
+    deleteTokens(): void {
         localStorage.removeItem(accessTokenKey)
         localStorage.removeItem(refreshTokenKey)
     }
