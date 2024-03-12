@@ -1,37 +1,39 @@
 import {createAsyncThunk, createSlice, isFulfilled} from "@reduxjs/toolkit";
 import {AxiosError} from "axios";
 
-import {IAuth} from "../../intterfaces";
+import {IAuth, IUser} from "../../intterfaces";
 import {authService} from "../../services";
 
 interface IState {
     registerError: string;
     loginError: string;
+    currentUser: IUser;
 }
 
-const initialState:IState = {
+const initialState: IState = {
     registerError: null,
-    loginError: null
+    loginError: null,
+    currentUser: null
 }
 
 const register = createAsyncThunk<void, { user: IAuth }>(
     'authSlice/register',
-        async ({user}, {rejectWithValue}) => {
+    async ({user}, {rejectWithValue}) => {
         try {
             await authService.register(user)
-        }catch (e) {
+        } catch (e) {
             const err = e as AxiosError
             return rejectWithValue(err.response.data)
         }
-        }
+    }
 )
 
-const login = createAsyncThunk<void, { user:IAuth }>(
+const login = createAsyncThunk<IUser, { user: IAuth }>(
     'authSlice/login',
     async ({user}, {rejectWithValue}) => {
         try {
-            await authService.login(user)
-        }catch (e) {
+            return await authService.login(user)
+        } catch (e) {
             const err = e as AxiosError
             return rejectWithValue(err.response.data)
         }
@@ -39,11 +41,14 @@ const login = createAsyncThunk<void, { user:IAuth }>(
 )
 
 const authSlice = createSlice({
-    name:'authSlice',
+    name: 'authSlice',
     initialState,
-    reducers:{},
+    reducers: {},
     extraReducers: builder =>
         builder
+            .addCase(login.fulfilled, (state, action) => {
+                state.currentUser = action.payload
+            })
             .addCase(register.rejected, state => {
                 state.registerError = 'Username or password  is already exist'
             })
