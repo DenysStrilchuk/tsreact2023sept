@@ -32,6 +32,7 @@ apiService.interceptors.response.use(
                 try {
                     await authService.refresh()
                     isRefreshing = false
+                    runAfterRefresh()
                     return apiService(originalRequest)
                 } catch (e) {
                     authService.deleteTokens()
@@ -62,7 +63,12 @@ const subscribeToWaitList = (cb: IWaitList): void => {
     waitList.push(cb)
 }
 
-
+const runAfterRefresh = ():void => {
+    while (waitList.length) {
+        const cb = waitList.pop();
+        cb();
+    }
+}
 
 export {
     apiService
